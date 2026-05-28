@@ -4,117 +4,213 @@
   <meta charset="utf-8"/>
   <title>Howard County MD — Lots</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
 <aside id="sidebar">
-  <h1>Howard County MD<br>Residential Lots</h1>
 
-  <div class="filter-group">
-    <label class="filter-label">Min lot size</label>
-    <div class="range-row">
-      <input type="range" id="acreFilter" min="1" max="20" step="0.5" value="1">
-      <span id="acreVal">1</span> ac
+  <div id="sidebar-header">
+    <i data-lucide="home" class="header-icon"></i>
+    <div>
+      <div id="app-title">Howard County MD</div>
+      <div id="app-subtitle">Residential Lots</div>
     </div>
   </div>
 
-  <div class="filter-group">
-    <label class="filter-label" for="typeFilter">Show</label>
-    <select id="typeFilter">
-      <option value="all">All lots</option>
-      <option value="vacant">Vacant only</option>
-      <option value="improved">Improved only</option>
-    </select>
-  </div>
+  <div class="sidebar-section">
+    <div class="section-label">
+      <i data-lucide="sliders-horizontal"></i>
+      Filters
+    </div>
 
-  <div class="filter-group">
-    <label class="filter-label" for="districtFilter">Zoning district</label>
-    <select id="districtFilter">
-      <option value="all">All districts</option>
-    </select>
-  </div>
+    <div class="filter-group">
+      <div class="filter-label">Min lot size — <span id="acreVal">1</span> ac</div>
+      <input type="range" id="acreFilter" min="1" max="20" step="0.5" value="1">
+    </div>
 
-  <div class="filter-group">
+    <div class="filter-group">
+      <div class="filter-label">Show</div>
+      <select id="typeFilter">
+        <option value="all">All lots</option>
+        <option value="vacant">Vacant only</option>
+        <option value="improved">Improved only</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label">Zoning district</div>
+      <select id="districtFilter">
+        <option value="all">All districts</option>
+      </select>
+    </div>
+
     <label class="toggle-label">
       <input type="checkbox" id="hideRestricted" checked>
+      <span class="check-box"></span>
       Hide restricted zones
     </label>
   </div>
 
-  <div class="filter-group">
+  <div class="sidebar-section">
+    <div class="section-label">
+      <i data-lucide="layers"></i>
+      Map Layers
+    </div>
+
     <label class="toggle-label">
       <input type="checkbox" id="parcelToggle" checked>
+      <span class="check-box"></span>
+      <span class="layer-swatch" style="background:#e67e22"></span>
       Parcel boundaries
     </label>
-  </div>
 
-  <div class="filter-group">
     <label class="toggle-label">
       <input type="checkbox" id="floodToggle">
-      Floodplain overlay
+      <span class="check-box"></span>
+      <span class="layer-swatch" style="background:#3498db"></span>
+      HoCo Floodplain
     </label>
-  </div>
 
-  <div class="filter-group">
     <label class="toggle-label">
       <input type="checkbox" id="zoningToggle">
+      <span class="check-box"></span>
+      <span class="layer-swatch" style="background:#9b59b6"></span>
       Zoning overlay
     </label>
-  </div>
 
-  <div class="filter-group">
     <label class="toggle-label">
       <input type="checkbox" id="metroToggle">
-      Public Water &amp; Sewer Area
+      <span class="check-box"></span>
+      <span class="layer-swatch" style="background:#2980b9"></span>
+      Water &amp; Sewer area
     </label>
   </div>
 
-  <div class="section-header">Parks, Open Space &amp; Easements</div>
+  <details class="layer-group">
+    <summary>
+      <i data-lucide="trees"></i>
+      Parks, Open Space &amp; Easements
+    </summary>
+    <div class="layer-group-body">
+      <label class="toggle-label">
+        <input type="checkbox" id="forestCoverToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#27ae60"></span>
+        Forest Cover - 2009
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="forestEasementToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#1a7a45"></span>
+        Forest Conserv Easements
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="hocoOpenSpaceToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#58d68d"></span>
+        HoCo Open Space
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="hocoParksToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#2ecc71"></span>
+        HoCo Parks
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="nonHocoParksToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#a9dfbf"></span>
+        Non HoCo Parks &amp; OS
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="preservationToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#8e44ad"></span>
+        Preservation Easements
+      </label>
+    </div>
+  </details>
 
-  <div class="filter-group">
-    <label class="toggle-label">
-      <input type="checkbox" id="forestCoverToggle">
-      Forest Cover - 2009
-    </label>
+  <details class="layer-group">
+    <summary>
+      <i data-lucide="triangle-alert"></i>
+      Environmental Constraints
+    </summary>
+    <div class="layer-group-body">
+      <label class="toggle-label">
+        <input type="checkbox" id="femaFloodToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#1565c0"></span>
+        FEMA Flood Zones
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="streamsToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#00acc1"></span>
+        Stream Buffers (75–100 ft)
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="sensitiveSpeciesToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#f57c00"></span>
+        Sensitive Species Areas
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="greenInfraToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#00695c"></span>
+        Green Infrastructure
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="forestInteriorToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#0a4020"></span>
+        Forest Interior (75+ ac)
+      </label>
+    </div>
+  </details>
+
+  <details class="layer-group">
+    <summary>
+      <i data-lucide="landmark"></i>
+      Development Controls
+    </summary>
+    <div class="layer-group-body">
+      <label class="toggle-label">
+        <input type="checkbox" id="growthTiersToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#f9a825"></span>
+        Growth Tiers
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="historicDistrictsToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#795548"></span>
+        Historic Districts
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="countyOwnedLandToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#546e7a"></span>
+        County-Owned Land
+      </label>
+      <label class="toggle-label">
+        <input type="checkbox" id="landUseToggle">
+        <span class="check-box"></span>
+        <span class="layer-swatch" style="background:#8d6e63"></span>
+        Land Use
+      </label>
+    </div>
+  </details>
+
+  <div id="stats">
+    <i data-lucide="map-pin" class="stats-icon"></i>
+    Showing <b id="visCount">…</b> lots
   </div>
 
-  <div class="filter-group">
-    <label class="toggle-label">
-      <input type="checkbox" id="forestEasementToggle">
-      Forest Conserv Easements
-    </label>
-  </div>
-
-  <div class="filter-group">
-    <label class="toggle-label">
-      <input type="checkbox" id="hocoOpenSpaceToggle">
-      HoCo Open Space
-    </label>
-  </div>
-
-  <div class="filter-group">
-    <label class="toggle-label">
-      <input type="checkbox" id="hocoParksToggle">
-      HoCo Parks
-    </label>
-  </div>
-
-  <div class="filter-group">
-    <label class="toggle-label">
-      <input type="checkbox" id="nonHocoParksToggle">
-      Non HoCo Parks &amp; OS
-    </label>
-  </div>
-
-  <div class="filter-group">
-    <label class="toggle-label">
-      <input type="checkbox" id="preservationToggle">
-      Preservation Easements
-    </label>
-  </div>
-
-  <div id="stats">Showing <b id="visCount">…</b> lots</div>
 </aside>
 <div id="map"></div>
 <script type="module" src="/src/main.js"></script>
+<script>lucide.createIcons();</script>
 </body>
 </html>

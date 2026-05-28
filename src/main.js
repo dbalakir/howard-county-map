@@ -13,6 +13,7 @@ const ZONE_COLORS = {
 };
 
 const map = L.map('map', { maxZoom: 22 }).setView([39.287, -76.938], 11);
+window._map = map;
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
@@ -140,6 +141,30 @@ Object.entries(parkLayers).forEach(([id, layer]) => {
   });
 });
 
+// --- Environmental Constraints WMS layers ---
+const constraintLayers = {
+  femaFloodToggle:           L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Floodplain',                      opacity: 0.5  }),
+  streamsToggle:             L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Stream_Centerline_Buffer',        opacity: 0.65 }),
+  sensitiveSpeciesToggle:    L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:MD_SensitiveSpeciesReviewAreas',  opacity: 0.5  }),
+  greenInfraToggle:          L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Green_Infrastructure_Network',    opacity: 0.6  }),
+  forestInteriorToggle:      L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:GI_Forest_Interior_75acs',        opacity: 0.6  }),
+};
+
+// --- Development Controls WMS layers ---
+const devControlLayers = {
+  growthTiersToggle:       L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:GrowthTiers',        opacity: 0.45 }),
+  historicDistrictsToggle: L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Historic_Districts', opacity: 0.65 }),
+  countyOwnedLandToggle:   L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:County_Owned_Land',  opacity: 0.55 }),
+  landUseToggle:           L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Land_Use',           opacity: 0.5  }),
+};
+
+[...Object.entries(constraintLayers), ...Object.entries(devControlLayers)].forEach(([id, layer]) => {
+  document.getElementById(id).addEventListener('change', e => {
+    if (e.target.checked) layer.addTo(map);
+    else map.removeLayer(layer);
+  });
+});
+
 // --- Zoning overlay ---
 let zoningLayer = null;
 let zoningData = null;
@@ -225,6 +250,7 @@ function refresh(data) {
     const [lon, lat] = f.geometry.coordinates;
     L.marker([lat, lon], { icon: makeIcon(p) })
       .bindPopup(buildPopup(p), { maxWidth: 320 })
+      .on('click', () => highlightParcel(lon, lat))
       .addTo(markers);
     count++;
   });
@@ -243,6 +269,62 @@ function populateDistrictFilter(data) {
     sel.appendChild(opt);
   });
 }
+
+// --- Parcel highlight on click ---
+
+function pointInPolygon(px, py, ring) {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i], [xj, yj] = ring[j];
+    if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi)
+      inside = !inside;
+  }
+  return inside;
+}
+
+function featureContains(feature, lng, lat) {
+  const g = feature.geometry;
+  const rings = g.type === 'Polygon' ? g.coordinates : g.coordinates.flat(1);
+  return rings.some(ring => pointInPolygon(lng, lat, ring));
+}
+
+let highlightLayer = null;
+
+async function highlightParcel(lng, lat) {
+  if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
+
+  const d = 0.0004;
+  const params = new URLSearchParams({
+    service: 'WFS', version: '1.0.0', request: 'GetFeature',
+    typeName: 'general:Property_Public_NoName',
+    outputFormat: 'application/json',
+    maxFeatures: '20',
+    srsName: 'EPSG:4326',
+    bbox: `${lng - d},${lat - d},${lng + d},${lat + d},EPSG:4326`,
+  });
+
+  try {
+    const resp = await fetch(`/wfs?${params}`);
+    const data = await resp.json();
+    const hit = data.features?.find(f => featureContains(f, lng, lat))
+              ?? data.features?.[0];
+    if (!hit) return;
+
+    highlightLayer = L.geoJSON(hit, {
+      style: {
+        color: '#f59e0b',
+        weight: 3,
+        opacity: 1,
+        fillColor: '#fbbf24',
+        fillOpacity: 0.25,
+      },
+    }).addTo(map);
+    highlightLayer.bringToFront();
+  } catch (_) {}
+}
+
+// Highlight on bare map click (outside markers)
+map.on('click', e => highlightParcel(e.latlng.lng, e.latlng.lat));
 
 fetch('/data/lots.geojson')
   .then(r => r.json())
