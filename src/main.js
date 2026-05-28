@@ -12,11 +12,12 @@ const ZONE_COLORS = {
   'OTHER':                        '#d5d8dc',
 };
 
-const map = L.map('map').setView([39.287, -76.938], 11);
+const map = L.map('map', { maxZoom: 22 }).setView([39.287, -76.938], 11);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
-  maxZoom: 19,
+  maxZoom: 22,
+  maxNativeZoom: 19,
 }).addTo(map);
 
 function makeIcon(p) {
@@ -71,7 +72,8 @@ lotLegend.onAdd = () => {
   div.innerHTML = `<b>Lot type</b><br>
     <span class="legend-dot" style="background:#27ae60;border:2px solid #1a7a45"></span>Vacant<br>
     <span class="legend-dot" style="background:#e67e22;border:2px solid #b85c00"></span>Improved<br>
-    <span class="legend-dot" style="background:#8b5cf6;border:2px solid #6d28d9"></span>Restricted zone`;
+    <span class="legend-dot" style="background:#8b5cf6;border:2px solid #6d28d9"></span>Restricted zone<br>
+    <span style="display:inline-block;width:24px;height:0;border-top:2px dashed #2980b9;margin-right:6px;vertical-align:middle;opacity:0.8"></span>Public Water &amp; Sewer Area`;
   return div;
 };
 lotLegend.addTo(map);
@@ -86,6 +88,57 @@ zoneLegend.onAdd = () => {
     ).join('<br>');
   return div;
 };
+
+// --- Howard County WMS base ---
+const HC_WMS = '/wms';
+
+const parcelLayer = L.tileLayer.wms(HC_WMS, {
+  layers: 'general:Property_Public_NoName',
+  format: 'image/png',
+  transparent: true,
+  version: '1.1.1',
+  opacity: 0.5,
+  minZoom: 14,
+  maxZoom: 22,
+  maxNativeZoom: 18,
+}).addTo(map);
+
+const floodLayer = L.tileLayer.wms(HC_WMS, {
+  layers: 'general:Floodplain_HoCo',
+  format: 'image/png',
+  transparent: true,
+  version: '1.1.1',
+  opacity: 0.5,
+});
+
+document.getElementById('parcelToggle').addEventListener('change', e => {
+  if (e.target.checked) parcelLayer.addTo(map);
+  else map.removeLayer(parcelLayer);
+});
+
+document.getElementById('floodToggle').addEventListener('change', e => {
+  if (e.target.checked) floodLayer.addTo(map);
+  else map.removeLayer(floodLayer);
+});
+
+// --- Parks, Open Space & Easements WMS layers ---
+const wmsDefaults = { format: 'image/png', transparent: true, version: '1.1.1', opacity: 0.7, maxZoom: 22, maxNativeZoom: 18 };
+
+const parkLayers = {
+  forestCoverToggle:    L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Forest_Cover' }),
+  forestEasementToggle: L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Forest_Conservation_Easements' }),
+  hocoOpenSpaceToggle:  L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Open_Space_Natural_Resource' }),
+  hocoParksToggle:      L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Parks' }),
+  nonHocoParksToggle:   L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Open_Space_Other' }),
+  preservationToggle:   L.tileLayer.wms(HC_WMS, { ...wmsDefaults, layers: 'general:Preservation_Easements' }),
+};
+
+Object.entries(parkLayers).forEach(([id, layer]) => {
+  document.getElementById(id).addEventListener('change', e => {
+    if (e.target.checked) layer.addTo(map);
+    else map.removeLayer(layer);
+  });
+});
 
 // --- Zoning overlay ---
 let zoningLayer = null;
@@ -121,6 +174,28 @@ fetch('/data/zoning.geojson')
   .then(data => {
     zoningData = data;
     document.getElementById('zoningToggle').addEventListener('change', e => setZoningVisible(e.target.checked));
+  });
+
+// --- Metro District overlay ---
+let metroLayer = null;
+
+fetch('/data/metro_district.geojson')
+  .then(r => r.json())
+  .then(data => {
+    metroLayer = L.geoJSON(data, {
+      style: {
+        fillColor: '#2980b9',
+        fillOpacity: 0.12,
+        color: '#2980b9',
+        weight: 2,
+        opacity: 0.7,
+        dashArray: '5 4',
+      },
+    });
+    document.getElementById('metroToggle').addEventListener('change', e => {
+      if (e.target.checked) { metroLayer.addTo(map); metroLayer.bringToBack(); }
+      else map.removeLayer(metroLayer);
+    });
   });
 
 // --- Lots ---

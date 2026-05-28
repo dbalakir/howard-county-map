@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/wms"
+  to = "https://hcgeoserver.howardcountymd.gov:8443/geoserver/wms"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/wms/*"
+  to = "https://hcgeoserver.howardcountymd.gov:8443/geoserver/wms/:splat"
+  status = 200
+  force = true

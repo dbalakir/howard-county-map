@@ -6,39 +6,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 </head>
 <body>
-<div id="toolbar">
-  <span id="title">Howard County MD — Residential Lots</span>
+<aside id="sidebar">
+  <h1>Howard County MD<br>Residential Lots</h1>
 
-  <label>Min acres: <span id="acreVal">1</span>
-    <input type="range" id="acreFilter" min="1" max="20" step="0.5" value="1">
-  </label>
+  <div class="filter-group">
+    <label class="filter-label">Min lot size</label>
+    <div class="range-row">
+      <input type="range" id="acreFilter" min="1" max="20" step="0.5" value="1">
+      <span id="acreVal">1</span> ac
+    </div>
+  </div>
 
-  <label>Show:
+  <div class="filter-group">
+    <label class="filter-label" for="typeFilter">Show</label>
     <select id="typeFilter">
       <option value="all">All lots</option>
       <option value="vacant">Vacant only</option>
       <option value="improved">Improved only</option>
     </select>
-  </label>
+  </div>
 
-  <label>Zone:
+  <div class="filter-group">
+    <label class="filter-label" for="districtFilter">Zoning district</label>
     <select id="districtFilter">
       <option value="all">All districts</option>
     </select>
-  </label>
+  </div>
 
-  <label class="toggle-label">
-    <input type="checkbox" id="hideRestricted" checked>
-    Hide restricted zones
-  </label>
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="hideRestricted" checked>
+      Hide restricted zones
+    </label>
+  </div>
 
-  <label class="toggle-label">
-    <input type="checkbox" id="zoningToggle">
-    Zoning overlay
-  </label>
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="parcelToggle" checked>
+      Parcel boundaries
+    </label>
+  </div>
 
-  <span id="stats">Showing <b id="visCount">…</b> lots</span>
-</div>
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="floodToggle">
+      Floodplain overlay
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="zoningToggle">
+      Zoning overlay
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="metroToggle">
+      Public Water &amp; Sewer Area
+    </label>
+  </div>
+
+  <div class="section-header">Parks, Open Space &amp; Easements</div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="forestCoverToggle">
+      Forest Cover - 2009
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="forestEasementToggle">
+      Forest Conserv Easements
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="hocoOpenSpaceToggle">
+      HoCo Open Space
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="hocoParksToggle">
+      HoCo Parks
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="nonHocoParksToggle">
+      Non HoCo Parks &amp; OS
+    </label>
+  </div>
+
+  <div class="filter-group">
+    <label class="toggle-label">
+      <input type="checkbox" id="preservationToggle">
+      Preservation Easements
+    </label>
+  </div>
+
+  <div id="stats">Showing <b id="visCount">…</b> lots</div>
+</aside>
 <div id="map"></div>
 <script type="module" src="/src/main.js"></script>
 </body>
