@@ -49,6 +49,23 @@
       <span class="check-box"></span>
       Hide restricted zones
     </label>
+
+    <label class="toggle-label">
+      <input type="checkbox" id="forSaleOnly">
+      <span class="check-box"></span>
+      <span style="color:#e53935;font-weight:600">For sale (MLS) only</span>
+    </label>
+
+    <label class="toggle-label">
+      <input type="checkbox" id="hideNearMetro">
+      <span class="check-box"></span>
+      <span style="color:#0288d1">Hide near-utility lots</span>
+    </label>
+
+    <div class="filter-group">
+      <div class="filter-label">Owner search</div>
+      <input type="text" id="ownerSearch" placeholder="e.g. SMITH" style="width:100%;padding:4px 6px;font-size:13px;border:1px solid #ccc;border-radius:4px;">
+    </div>
   </div>
 
   <div class="sidebar-section">
@@ -210,6 +227,22 @@
 
 </aside>
 <div id="map"></div>
+
+<!-- Lot detail modal -->
+<div id="lot-modal" role="dialog" aria-modal="true" aria-labelledby="modal-address">
+  <div id="modal-backdrop"></div>
+  <div id="modal-panel">
+    <div id="modal-header">
+      <div id="modal-address-wrap">
+        <h2 id="modal-address"></h2>
+        <div id="modal-badges"></div>
+      </div>
+      <button id="modal-close" aria-label="Close">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
 <script type="module" src="/src/main.js"></script>
 <script>lucide.createIcons();</script>
 </body>

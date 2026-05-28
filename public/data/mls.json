@@ -1,0 +1,50 @@
+[
+  {
+    "address": "5060 AMESBURY DR, Columbia, MD 21044",
+    "for_sale": true,
+    "mls_number": "MDHW2069082",
+    "mls_status": "C/S",
+    "list_price": "$1,200,000",
+    "status_date": "05/27/26",
+    "beds": "5",
+    "baths": "4",
+    "structure_type": "Detached",
+    "list_office": "RE/MAX Realty Group (RMAX1006)"
+  },
+  {
+    "address": "2004 DIANE LN, Ellicott City, MD 21042",
+    "for_sale": true,
+    "mls_number": "MDHW2060866",
+    "mls_status": "ACT",
+    "list_price": "$1,700,000",
+    "status_date": "04/17/26",
+    "beds": "6",
+    "baths": "4/1",
+    "structure_type": "Detached",
+    "list_office": "Douglas Realty LLC (DOGR1)"
+  },
+  {
+    "address": "11678 FREDERICK RD, Ellicott City, MD 21042",
+    "for_sale": true,
+    "mls_number": "MDHW2063018",
+    "mls_status": "ACT",
+    "list_price": "$1,750,000",
+    "status_date": "01/15/26",
+    "beds": "4",
+    "baths": "4",
+    "structure_type": "Detached",
+    "list_office": "Northrop Realty (NRP1)"
+  },
+  {
+    "address": "8325 GROVE ANGLE RD, Ellicott City, MD 21043",
+    "for_sale": true,
+    "mls_number": "MDHW2060074",
+    "mls_status": "ACT",
+    "list_price": "$2,333,000",
+    "status_date": "09/25/25",
+    "beds": "6",
+    "baths": "6/1",
+    "structure_type": "Detached",
+    "list_office": "Samson Properties (SAMP41)"
+  }
+]
